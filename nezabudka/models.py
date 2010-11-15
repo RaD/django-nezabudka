@@ -12,7 +12,7 @@ class AbstractGUID(models.Model):
     # The parameter blank=True allows to use this field with forms,
     # the field will never be empty because of save() method.
     guid = models.CharField(primary_key=True, max_length=32, blank=True)
-    user = models.ForeignKey(User, verbose_name=_(u'User'))
+    user = models.ForeignKey(User, verbose_name=_(u'User'), related_name='%(app_label)s_%(class)s_related')
     is_active = models.BooleanField(verbose_name=_(u'Is this record active?'), default=True)
     reg_datetime = models.DateTimeField(verbose_name=_(u'Registered'), auto_now_add=True)
 
