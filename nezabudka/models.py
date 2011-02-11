@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2010 Ruslan Popov <ruslan.popov@gmail.com>
+# (c) 2010-2011 Ruslan Popov <ruslan.popov@gmail.com>
 
 from django.conf import settings
 from django.db import models
@@ -99,6 +99,7 @@ class Ticket(AbstractGUID):
     class Meta:
         verbose_name = _(u'Ticket')
         verbose_name_plural = _(u'Tickets')
+        ordering = ('-reg_datetime',)
 
     def __init__(self, *args, **kwargs):
         super(Ticket, self).__init__(*args, **kwargs)

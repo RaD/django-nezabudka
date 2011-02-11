@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2010 Ruslan Popov <ruslan.popov@gmail.com>
+# (c) 2010-2011 Ruslan Popov <ruslan.popov@gmail.com>
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
@@ -94,9 +94,8 @@ class m_Ticket(Abstract):
 
     inlines = (MediaInline, CommentInline,)
 
-    list_display = (
-        'title', 'status', 'replies', 'product',
-        'assigned_to', 'priority', 'severity',
+    list_display = ('title', 'status', 'replies', 'product',
+                    'assigned_to', 'priority', 'severity',
                     'user', 'is_active', 'reg_datetime')
     list_filter = ('assigned_to', 'priority', 'severity', 'status',
                    'project', 'component', 'category', 'user',)
@@ -122,7 +121,6 @@ class m_Ticket(Abstract):
     replies.short_description = _(u'Replies')
 
     def save_formset(self, request, form, formset, change):
-        print 'saving the formset', formset
         instances = formset.save(commit=False)
         for instance in instances:
             if not instance.pk: # new record
@@ -142,7 +140,7 @@ class m_Comment(Abstract):
         )
 
 # hide this model in administrative interface
-#admin.site.register(models.Comment, m_Comment)
+admin.site.register(models.Comment, m_Comment)
 models.Comment.model_desc = _(u'This model consists of comments list.')
 
 class m_Media(Abstract):
@@ -153,6 +151,5 @@ class m_Media(Abstract):
         (None, {'fields': ('ticket', 'title', 'filename', 'is_active')}),
         )
 
-# hide this model in administrative interface
-#admin.site.register(models.Media, m_Media)
+admin.site.register(models.Media, m_Media)
 models.Media.model_desc = _(u'This model consists of media list.')
