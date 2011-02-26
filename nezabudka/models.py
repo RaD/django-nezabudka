@@ -100,11 +100,27 @@ class Ticket(AbstractGUID):
         verbose_name = _(u'Ticket')
         verbose_name_plural = _(u'Tickets')
         ordering = ('-reg_datetime',)
-
+    
     def __init__(self, *args, **kwargs):
         super(Ticket, self).__init__(*args, **kwargs)
         self._meta.get_field('user').verbose_name = _(u'Reported By')
-
+    
+    def store_record(self):
+        r = {
+             'id': self.pk,
+             'title': unicode(self.title),
+             'user': unicode(self.user),
+             'created': self.reg_datetime,
+             'project': unicode(self.project),
+             'component': unicode(self.component),
+             'category': unicode(self.category),
+             'assignedTo': unicode(self.assigned_to),
+             'priority': unicode(self.priority),
+             'severity': unicode(self.severity),
+             'status': unicode(self.status)
+        }
+        return r
+    
 class Comment(AbstractGUID):
     ticket = models.ForeignKey(Ticket, verbose_name=_(u'Ticket'))
     text = models.TextField()

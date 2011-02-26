@@ -103,6 +103,8 @@ INSTALLED_APPS = (
     'nezabudka',
 )
 
+TICKETS_ON_PAGE = 20
+
 try:
     from settings_local import *
 except ImportError:

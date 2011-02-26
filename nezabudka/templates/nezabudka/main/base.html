@@ -11,14 +11,18 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
     <!-- Adapter for jQuery -->
     <script src="{{ MEDIA_URL }}nezabudka/extjs/adapter/jquery/ext-jquery-adapter.js"></script>
-    <!-- ExtJs -->    
+    <!-- ExtJs -->
+    {% if DEBUG %}
+    <script src="{{ MEDIA_URL }}nezabudka/extjs/ext-all-debug-w-comments.js"></script>
+    {% else %}    
     <script src="{{ MEDIA_URL }}nezabudka/extjs/ext-all.js"></script>
+    {% endif %}    
     <!-- Extension for message display -->
     <script src="{{ MEDIA_URL }}nezabudka/js/Ext.ux.msg.js"></script>
     <!-- Initialization of Ext.Direct provider -->
     <script src="{% url nezabudka:api %}"></script>
     <!-- Components -->
-
+    <script src="{{ MEDIA_URL }}nezabudka/js/Ext.ux.TicketsGrid.js"></script>    
     <!-- Our main viewport -->
     <script src="{{ MEDIA_URL }}nezabudka/js/Ext.ux.MainViewport.js"></script>    
     <script type="text/javascript">
@@ -35,6 +39,8 @@
         Ext.Direct.on('exception', function(event){
             Ext.ux.msg('RPC Error', event.message, Ext.Msg.ERROR);
         });
+        
+        var TICKETS_ON_PAGE = {{ TICKETS_ON_PAGE }};
     </script>      
 {% endblock %}
 
