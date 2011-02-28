@@ -41,7 +41,7 @@ Ext.ux.TicketGrid = Ext.extend(Ext.grid.GridPanel, {
                     if(this.showPreview){
                         rp.body = '<p>'+
                             '<b>Project:</b> '+record.get('project')+
-                            '<b>Created:</b> '+record.get('creaed')+'<br/>'+
+                            '<b>Created:</b> '+record.get('created')+'<br/>'+
                             '<b>Created by:</b> '+record.get('user')+
                             '<b>Component:</b> '+record.get('component')+'<br/>'+
                             '<b>Category:</b> '+record.get('category')+
@@ -98,7 +98,7 @@ Ext.ux.TicketGrid = Ext.extend(Ext.grid.GridPanel, {
     },
     onRowDblClick: function(grid, rowIndex){
         var record = this.getStore().getAt(rowIndex);
-        Ext.getCmp('ticket-panel').update(record.data);
+        Ext.getCmp('ticket-panel').setTicket(record);
     }
 });
 

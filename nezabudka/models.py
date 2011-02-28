@@ -97,7 +97,7 @@ class Ticket(AbstractModel):
         super(Ticket, self).__init__(*args, **kwargs)
         self._meta.get_field('user').verbose_name = _(u'Reported By')
 
-    def store_record(self, with_comments=False):
+    def store_record(self):
         r = {
              'id': self.pk,
              'title': unicode(self.title),

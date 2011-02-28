@@ -1,5 +1,5 @@
 Ext.ux.CreateTicketForm = Ext.extend(Ext.form.FormPanel, {
-    initialConfig: function(){
+    initComponent: function(){
         var config = {
             clientValidation: true,
             paramsAsHash: true,
@@ -9,7 +9,7 @@ Ext.ux.CreateTicketForm = Ext.extend(Ext.form.FormPanel, {
             items: []
         };
         Ext.apply(this, Ext.apply(this.initialConfig, config));
-        Ext.ux.CreateTicketForm.superclass.initialConfig.call(this);
+        Ext.ux.CreateTicketForm.superclass.initComponent.call(this);
     }
 });
 
