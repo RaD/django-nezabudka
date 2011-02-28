@@ -106,7 +106,7 @@ class m_Ticket(Abstract):
         (u'State',
          {'fields': (('priority', 'severity', 'status'),)}),
         (u'Ticket',
-         {'fields': ('parent', 'assigned_to', 'title', 'is_active')}),
+         {'fields': (('parent', 'is_active'), ('assigned_to', 'title'))}),
         )
 
     def product(self, ticket):
