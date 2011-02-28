@@ -93,6 +93,7 @@ class Ticket(AbstractModel):
     priority = models.ForeignKey(Priority, verbose_name=_(u'Priority'))
     severity = models.ForeignKey(Severity, verbose_name=_(u'Severity'))
     status = models.ForeignKey(Status, verbose_name=_(u'Status'))
+    description = models.TextField(_('Description'), blank=True)
     title = models.CharField(verbose_name=_(u'Title'), max_length=256,
                              help_text=_(u'Ticket Title'))
     class Meta:
