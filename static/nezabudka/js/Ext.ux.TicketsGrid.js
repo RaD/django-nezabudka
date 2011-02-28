@@ -79,6 +79,13 @@ Ext.ux.TicketGrid = Ext.extend(Ext.grid.GridPanel, {
                     dataIndex: 'status'                    
                 }]
             }),
+            tbar: [{
+                text: 'Add',
+                handler: function(){
+                    Ext.ux.msg('Add ticket', 'TODO', Ext.Msg.INFO);
+                },
+                scope: this
+            }],
             bbar: new Ext.PagingToolbar({
                 store: 'tickets-store',
                 displayInfo: true,
@@ -86,7 +93,12 @@ Ext.ux.TicketGrid = Ext.extend(Ext.grid.GridPanel, {
             })              
         };
         Ext.apply(this, Ext.apply(this.initialConfig, config));
-        Ext.ux.TicketGrid.superclass.initComponent.call(this);           
+        Ext.ux.TicketGrid.superclass.initComponent.call(this);
+        this.on('rowdblclick', this.onRowDblClick, this);
+    },
+    onRowDblClick: function(grid, rowIndex){
+        var record = this.getStore().getAt(rowIndex);
+        Ext.getCmp('ticket-panel').update(record.data);
     }
 });
 

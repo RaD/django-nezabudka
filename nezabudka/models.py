@@ -22,13 +22,6 @@ class AbstractModel(models.Model):
     def __unicode__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        """ Fill PK with GUID."""
-        import uuid
-        if not self.guid or self.guid == u'':
-            self.guid = uuid.uuid4().get_hex()
-        super(AbstractModel, self).save(*args, **kwargs)
-
 class Project(AbstractModel):
     """ Project Description. """
 
@@ -104,7 +97,7 @@ class Ticket(AbstractModel):
         super(Ticket, self).__init__(*args, **kwargs)
         self._meta.get_field('user').verbose_name = _(u'Reported By')
 
-    def store_record(self):
+    def store_record(self, with_comments=False):
         r = {
              'id': self.pk,
              'title': unicode(self.title),

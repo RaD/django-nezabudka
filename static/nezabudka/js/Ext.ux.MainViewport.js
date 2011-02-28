@@ -13,8 +13,8 @@ Ext.ux.MainViewport = Ext.extend(Ext.Viewport, {
                 xtype: 'ext:ux:tickets-grid'
             },{
                 region: 'east',
-                width: 350,
-                html: 'Hello!',
+                width: '50%',
+                xtype: 'ext:ux:ticket-panel'
             },{
                 region: 'north',
                 contentEl: 'header',

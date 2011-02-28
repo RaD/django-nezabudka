@@ -23,6 +23,11 @@ class TicketApiClass(object):
     
     read._args_len = 1
     
+    def create(self, rdata, user):
+        return {}
+    
+    create._form_hanlder = True
+    
 class Router(RpcRouter):
     
     def __init__(self):
