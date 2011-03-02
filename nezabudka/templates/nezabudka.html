@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+{% load i18n %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+<head>
+  <title>Nezabudka: {% trans "Simple BugTracker" %}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="robots" content="all"/>
+  <meta name="generator" content="Django"/>
+  <meta property="og:site_name" content="Nezabudka"/>
+  <meta property="og:image" content="http://{{ site.domain }}{{ MEDIA_URL }}pics/favicon.png"/>
+  <link rel="shortcut icon" href="{{ MEDIA_URL }}pics/favicon.png"/>
+  <link rel="stylesheet" href="/static/nezabudka/css/reset.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/static/nezabudka/css/basic.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="/static/nezabudka/css/style.css" type="text/css" media="all" />
+  <script type="text/javascript" src="/admin/media/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/admin/media/js/jquery.init.js"></script>
+  <script type="text/javascript">var $ = django.jQuery;</script>
+  <script type="text/javascript" src="/static/nezabudka/js/engine.js"></script>
+</head>
+<body>
+
+  <div id="sitename">
+    <h1>{% trans "Nezabudka" %}</h1>
+  </div>
+
+  <div id="contentname">
+    <h2>{% trans "Project" %}</h2>
+  </div>
+
+  <div id="content">
+    <table width="100%" style="margin-top: 1em;">
+      <colgroup>
+        <col width="20%"/>
+        <col width="45%"/>
+        <col width="35%"/>
+      </colgroup>
+      <tr>
+        <td id="selector">
+          <div>{% trans "Statuses" %}</div>
+          <div id="status" class="sublevel"></div>
+        </td>
+        <td>
+          <div id="ticket_list"></div>
+        </td>
+        <td>
+          <div id="item_info"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</body>
+</html>

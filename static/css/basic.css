@@ -1,0 +1,111 @@
+body { font:13px/1.231 sans-serif; *font-size:small; } /* оставляем хак, для точности */
+
+select, input, textarea, button { font:99% sans-serif; }
+
+/* нормализуем размеры моноширинных шрифтов
+ * en.wikipedia.org/wiki/MediaWiki_talk:Common.css/Archive_11#Teletype_style_fix_for_Chrome
+ */
+pre, code, kbd, samp { font-family: monospace, sans-serif; }
+
+
+/*
+ * базовые стили (самый минимум)
+ */
+
+
+body, select, input, textarea {
+  /* #444 выглядит лучше черного цвета: twitter.com/H_FJ/statuses/11800719859 */
+  color: #444;
+  /* укажите ваш базовый шрифт здесь, чтобы он везде был одинаковым */
+  /* font-family: Georgia, serif;  */
+}
+
+/* У заголовков (h1,h2,etc) нет дефолтных размеров или отступов,
+   вам нужно будет указать их самим. */
+h1,h2,h3,h4,h5,h6 { font-weight: bold; }
+
+/* всегда показывайте полосу прокрутки в браузерах отличных от IE */
+html { overflow-y: scroll; }
+
+
+/* Делаем фокус доступным (accessible): people.opera.com/patrickl/experiments/keyboard/test */
+a:hover, a:active { outline: none; }
+
+a, a:active, a:visited { color: #607890; }
+a:hover { color: #036; }
+
+
+ul, ol { margin-left: 1.8em; }
+ol { list-style-type: decimal; }
+
+/* Убераем отступы от навигационных списков */
+nav ul, nav li { margin: 0; }
+
+small { font-size: 85%; }
+strong, th { font-weight: bold; }
+th { text-align: right; padding: 2px 8px; }
+
+td, td img { vertical-align: top; }
+
+sub { vertical-align: sub; font-size: smaller; }
+sup { vertical-align: super; font-size: smaller; }
+
+pre {
+  padding: 15px;
+
+  /* www.pathf.com/blogs/2008/05/formatting-quoted-code-in-blog-posts-css21-white-space-pre-wrap/ */
+  white-space: pre; /* CSS2 */
+  white-space: pre-wrap; /* CSS 2.1 */
+  white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+  word-wrap: break-word; /* IE */
+}
+
+textarea { overflow: auto; } /* thnx ivannikolic! www.sitepoint.com/blogs/2010/08/20/ie-remove-textarea-scrollbars/ */
+
+.ie6 legend, .ie7 legend { margin-left: -7px; } /* thnx ivannikolic! */
+
+/* выравниваем чекбоксы, радио кнопки и тектовые поля по отношению к их меткам
+   by: Thierry Koblentz tjkdesign.com/ez-css/css/base.css ; */
+input[type="radio"] { vertical-align: text-bottom; }
+input[type="checkbox"] { vertical-align: bottom; }
+.ie7 input[type="checkbox"] { vertical-align: baseline; }
+.ie6 input { vertical-align: text-bottom; }
+
+input[type="text"] { width: 96%; }
+input[class="vDateField"] { width: auto; }
+input[class="vTimeField"] { width: auto; }
+
+/* курсор в виде руки для всех кликабельных элементов input */
+label, input[type=button], input[type=submit], button { cursor: pointer; }
+
+/* браузеры на webkit добавляют двухпиксельный отступ к элементам формы */
+button, input, select, textarea { margin: 0; }
+
+/* цвета для правильно/неправильно заполненных полей */
+input:valid, textarea:valid   {  }
+input:invalid, textarea:invalid {
+      border-radius: 1px;
+    -moz-box-shadow: 0px 0px 5px red;
+ -webkit-box-shadow: 0px 0px 5px red;
+         box-shadow: 0px 0px 5px red;
+}
+.no-boxshadow input:invalid,
+.no-boxshadow textarea:invalid { background-color: #f0dddd; }
+
+
+/* Эти селекторы должны быть разделены
+   Убираем text-shadow twitter.com/miketaylr/status/12228805301
+   Плюс: розовенько */
+::-moz-selection{ background: #FF5E99; color:#fff; text-shadow: none; }
+::selection { background:#FF5E99; color:#fff; text-shadow: none; }
+
+/*  j.mp/webkit-tap-highlight-color */
+a:link { -webkit-tap-highlight-color: #FF5E99; }
+
+/* исправляем кнопки для IE
+   www.viget.com/inspire/styling-the-button-element-in-internet-explorer/ */
+button {  width: auto; overflow: visible; }
+
+/* бикубическое изменение размеров для IMG с не-нативными размерами
+   code.flickr.com/blog/2008/11/12/on-ui-quality-the-little-things-client-side-image-resizing/ */
+.ie7 img { -ms-interpolation-mode: bicubic; }
