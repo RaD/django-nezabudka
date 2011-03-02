@@ -28,11 +28,11 @@
   </div>
 
   <div id="content">
-    <table width="100%" style="margin-top: 1em;">
+    <table>
       <colgroup>
-        <col width="20%"/>
-        <col width="45%"/>
-        <col width="35%"/>
+        <col width="auto"/>
+        <col width="auto"/>
+        <col width="auto"/>
       </colgroup>
       <tr>
         <td id="selector">
@@ -43,7 +43,11 @@
           <div id="ticket_list"></div>
         </td>
         <td>
-          <div id="item_info"></div>
+          <div id="item_info">
+            <div id="title"></div>
+            <div id="component">{% trans "Component" %}: <span/></div>
+          </div>
+          <div id="comment_list"></div>
         </td>
       </tr>
     </table>

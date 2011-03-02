@@ -26,13 +26,28 @@ html, body { height: 100%; }
    padding: 2px;
 }
 
+#item_info {
+   border: 1px solid black;
+   padding: 8px;
+   -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+#item_info #title {
+   font-size: 130%; font-weight: normal;
+}
+
+#comment_list {
+   margin-left: 16px;
+}
+
 .comment_item {
    background-color: #aa5;
    margin: 2px; padding: 8px;
    border: 1px solid gray;
    -moz-border-radius: 4px; -webkit-border-radius: 4px;
-   overflow: hidden; text-overflow : ellipsis;
+   overflow: auto; text-overflow : ellipsis;
 }
+
+
 
 body {
    color: black;
@@ -40,6 +55,14 @@ body {
    background-repeat: repeat-y;
    font: normal 14px Verdana;
    font: 85% "Lucida Sans Unicode", "Bitstream Vera Sans", "Trebuchet Unicode MS", "Lucida Grande", Verdana, Helvetica, sans-serif;
+}
+
+table {
+   width: 100%;
+}
+
+table td {
+   height: 400px;
 }
 
 #content {
