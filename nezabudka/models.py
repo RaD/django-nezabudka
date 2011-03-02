@@ -30,6 +30,10 @@ class Project(AbstractModel):
         verbose_name = _(u'Project')
         verbose_name_plural = _(u'Projects')
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('index_page', [str(self.id)])
+
 class Component(AbstractModel):
     """ Component Description. """
 
