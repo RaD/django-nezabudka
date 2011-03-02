@@ -6,12 +6,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
-class AbstractGUID(models.Model):
+class AbstractModel(models.Model):
     """ Abstract model to usage GUID as PK."""
 
-    # The parameter blank=True allows to use this field with forms,
-    # the field will never be empty because of save() method.
-    guid = models.CharField(primary_key=True, max_length=32, blank=True)
     user = models.ForeignKey(User, verbose_name=_(u'User'), related_name='%(app_label)s_%(class)s_related')
     is_active = models.BooleanField(verbose_name=_(u'Is this record active?'), default=True)
     reg_datetime = models.DateTimeField(verbose_name=_(u'Registered'), auto_now_add=True)
@@ -23,14 +20,7 @@ class AbstractGUID(models.Model):
     def __unicode__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        """ Fill PK with GUID."""
-        import uuid
-        if not self.guid or self.guid == u'':
-            self.guid = uuid.uuid4().get_hex()
-        super(AbstractGUID, self).save(*args, **kwargs)
-
-class Project(AbstractGUID):
+class Project(AbstractModel):
     """ Project Description. """
 
     title = models.CharField(verbose_name=_(u'Title'), max_length=64,
@@ -40,7 +30,7 @@ class Project(AbstractGUID):
         verbose_name = _(u'Project')
         verbose_name_plural = _(u'Projects')
 
-class Component(AbstractGUID):
+class Component(AbstractModel):
     """ Component Description. """
 
     project = models.ForeignKey(Project, verbose_name=_(u'Project'))
@@ -51,7 +41,7 @@ class Component(AbstractGUID):
         verbose_name = _(u'Component')
         verbose_name_plural = _(u'Components')
 
-class Category(AbstractGUID):
+class Category(AbstractModel):
     """ Category Description. """
     component = models.ForeignKey(Component, verbose_name=_(u'Component'))
     title = models.CharField(verbose_name=_(u'Title'), max_length=64,
@@ -61,7 +51,7 @@ class Category(AbstractGUID):
         verbose_name = _(u'Category')
         verbose_name_plural = _(u'Categories')
 
-class Priority(AbstractGUID):
+class Priority(AbstractModel):
     title = models.CharField(verbose_name=_(u'Title'), max_length=32,
                              help_text=_(u'Priority Title'))
 
@@ -69,7 +59,7 @@ class Priority(AbstractGUID):
         verbose_name = _(u'Priority')
         verbose_name_plural = _(u'Priorities')
 
-class Severity(AbstractGUID):
+class Severity(AbstractModel):
     title = models.CharField(verbose_name=_(u'Title'), max_length=32,
                              help_text=_(u'Severity Title'))
 
@@ -77,7 +67,7 @@ class Severity(AbstractGUID):
         verbose_name = _(u'Severity')
         verbose_name_plural = _(u'Severities')
 
-class Status(AbstractGUID):
+class Status(AbstractModel):
     title = models.CharField(verbose_name=_(u'Title'), max_length=32,
                              help_text=_(u'Status Title'))
 
@@ -85,7 +75,7 @@ class Status(AbstractGUID):
         verbose_name = _(u'Status')
         verbose_name_plural = _(u'Statuses')
 
-class Ticket(AbstractGUID):
+class Ticket(AbstractModel):
     parent = models.ForeignKey('self', blank=True, null=True, verbose_name=_('Parent'))
     project = models.ForeignKey(Project, verbose_name=_(u'Project'))
     component = models.ForeignKey(Component, verbose_name=_(u'Component'))
@@ -105,7 +95,7 @@ class Ticket(AbstractGUID):
         super(Ticket, self).__init__(*args, **kwargs)
         self._meta.get_field('user').verbose_name = _(u'Reported By')
 
-class Comment(AbstractGUID):
+class Comment(AbstractModel):
     ticket = models.ForeignKey(Ticket, verbose_name=_(u'Ticket'))
     text = models.TextField()
 
@@ -122,7 +112,7 @@ class Comment(AbstractGUID):
         super(Comment, self).__init__(*args, **kwargs)
         self._meta.get_field('user').verbose_name = _(u'Reported By')
 
-class Media(AbstractGUID):
+class Media(AbstractModel):
     ticket = models.ForeignKey(Ticket, verbose_name=_(u'Ticket'))
     title = models.CharField(verbose_name=_(u'Title'), max_length=256,
                              help_text=_(u'Media Title'))
