@@ -12,10 +12,14 @@
   <link rel="stylesheet" href="/static/nezabudka/css/reset.css" type="text/css" media="all" />
   <link rel="stylesheet" href="/static/nezabudka/css/basic.css" type="text/css" media="all" />
   <link rel="stylesheet" href="/static/nezabudka/css/style.css" type="text/css" media="all" />
-  <script type="text/javascript" src="/admin/media/js/jquery.min.js"></script>
-  <script type="text/javascript" src="/admin/media/js/jquery.init.js"></script>
-  <script type="text/javascript">var $ = django.jQuery;</script>
+  <link rel="stylesheet" href="/static/nezabudka/css/jquery.jgrowl.css" type="text/css" media="all" />
+  {% if settings.DEBUG %}
+  <script type="text/javascript" src="/static/nezabudka/js/jquery.min.js"></script>
+  {% else %}
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js" media="all"></script>
+  {% endif %}
   <script type="text/javascript" src="/static/nezabudka/js/engine.js"></script>
+  <script type="text/javascript" src="/static/nezabudka/js/jquery.jgrowl_compressed.js"></script>
 </head>
 <body>
 
@@ -23,9 +27,15 @@
     <h1>{% trans "Nezabudka" %}</h1>
   </div>
 
-  <div id="contentname">
-    <h2>{% trans "Project" %}</h2>
+  <div id="search">
+    <input type="text" name="search" value=""/>
   </div>
+
+  <div id="registration">
+    login/logout
+  </div>
+
+  <div class="clear"></div>
 
   <div id="content">
     <table>
@@ -48,10 +58,24 @@
             <div id="component">{% trans "Component" %}: <span/></div>
           </div>
           <div id="comment_list"></div>
+          <div id="action_buttons" class="hide">
+            <span>{% trans "Add comment" %}</span>
+            <span>{% trans "Add media" %}</span>
+          </div>
         </td>
       </tr>
     </table>
   </div>
 
+  <div id="add_comment_form" class="hide">
+    <fieldset>
+      <legend>{% trans "Enter the comment:" %}</legend>
+      <textarea id="comment" tabindex="4" cols="40" rows="15"></textarea>
+      <div class="right">
+        <button id="add_comment">{% trans "Ok" %}</button>
+        <button id="cancel_comment">{% trans "Cancel" %}</button>
+      </div>
+    </fieldset>
+  </div>
 </body>
 </html>

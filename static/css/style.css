@@ -65,6 +65,67 @@ table td {
    height: 400px;
 }
 
+#sitename {
+   float: left;
+}
+
+#search {
+   float: left;
+   width: 50%;
+}
+
+#registration {
+   position: absolute;
+   right: 20px;
+}
+
+#search input[type="text"] {
+   margin: 8px 0px 8px 200px;
+   padding: 8px;
+   font-size: 120%;
+   border: 2px solid blue;
+   -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+
 #content {
    padding: 0px 24px;
 }
+
+.clear {
+   clear: both;
+}
+
+.hide {
+   display: none;
+}
+
+.right {
+   text-align: right;
+}
+
+#add_comment_form {
+   position: absolute;
+   width: 30%;
+   padding: 4px;
+   background-color: white;
+   border: 2px solid gray;
+   -moz-border-radius: 4px; -webkit-border-radius: 4px;
+}
+#add_comment_form textarea {
+   width: 96%;
+}
+
+#action_buttons {
+   padding: 0px 16px 0px 32px;
+}
+#action_buttons span {
+   cursor: pointer;
+   padding: 2px 8px;
+   background-color: #eee;
+   border: 0px solid gray; border-width: 0px 2px 2px 2px;
+   -moz-border-radius: 0px 0px 4px 0px; -webkit-border-radius: 0px 0px 4px 0px;
+}
+#action_buttons span:hover {
+   background-color: #faa;
+}
+

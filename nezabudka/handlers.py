@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.models import Group
+from django.shortcuts import get_object_or_404
 from piston.handler import AnonymousBaseHandler
-import models
+from piston.utils import rc, throttle, validate
+import models, forms
 import re
 
 class TicketResource(AnonymousBaseHandler):
@@ -37,6 +39,18 @@ class CommentResource(AnonymousBaseHandler):
         out['comments'] = [{'id': o.id, 'text': o.text, 'user': o.user.username,
                             'date': o.reg_datetime} for o in comments]
         return out
+
+class CommentAddResource(AnonymousBaseHandler):
+    allowed_methods = ('POST',)
+    model = models.Comment
+    fields = ('ticket', 'text',)
+
+    @throttle(5, 60) # allow 5 times in 1 minutes
+    @validate(forms.CommentAdd)
+    def create(self, request):
+        if hasattr(request, 'form'):
+            request.form.save(request.user)
+            return rc.ALL_OK
 
 class MediaResource(AnonymousBaseHandler):
     allowed_methods = ('GET',)

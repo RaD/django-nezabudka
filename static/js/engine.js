@@ -1,24 +1,65 @@
 var engine = {
 
     window_width: 0,
+    window_height: 0,
+    ticket_id: 0,
 
     init: function() {
-        _this = this;
+        var _this = this;
+        // resize widgets on load and resize events
         $(window).bind('load resize', function() {
-            _this.window_width = w = $(this).width() - 50;
-            tds = $('#content table td');
+            var w = _this.window_width = $(this).width() - 50;
+            var h = _this.window_height = $(this).height() - 50;
+            var tds = $('#content table td');
             $(tds[0]).css({width: _this.pct_of_width(w, 0.1)});
             $(tds[1]).css({width: _this.pct_of_width(w, 0.4)});
             $(tds[2]).css({width: _this.pct_of_width(w, 0.5)});
         });
+        // load tickets and statuses
         this.tickets();
         this.statuses();
+        // action buttons
+        $('#action_buttons span').each(function() {
+            $(this).click(function() {
+                _this.toggle_comment_form(_this.ticket_id);
+            });
+        });
+        _this.setup_comment_form();
     },
     pct_of_width: function(width, percent) {
         return Math.floor(width * percent) + 'px'
     },
+    setup_comment_form: function() {
+        var _this = this,
+            form = $('#add_comment_form'),
+            text = $('#comment', form);
+        $('#cancel_comment', form).click(function() {
+            _this.toggle_comment_form(_this.ticket_id);
+        });
+        $('#add_comment', form).click(function() {
+            $.ajax({
+                type: 'POST',
+                url: '/nezabudka/comments/add/',
+                data: $.param({
+                    ticket: _this.ticket_id,
+                    text: text.val()
+                }),
+                success: function(msg) {
+                    text.val('');
+                    form.addClass('hide');
+                    _this.show_ticket(_this.ticket_id);
+                    $.jGrowl('Comment added successfully.', { header: 'Comments' });
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    $.jGrowl('Too fast commenting! Wait a little, please.<br/>'
+                             + 'Exception: ' + thrownError.toLowerCase(),
+                             { header: 'Comment Adding' });
+                }
+            });
+        });
+    },
     tickets: function() {
-        _this = this;
+        var _this = this;
         $.get('/nezabudka/tickets/', {},
               function(json) {
                   var content = $('#ticket_list'),
@@ -50,9 +91,10 @@ var engine = {
               });
     },
     show_ticket: function(ticket_id) {
-        _this = this;
-        var content = $('#item_info');
-        var comments = $('#comment_list');
+        var _this = this,
+            content = $('#item_info'),
+            comments = $('#comment_list');
+        _this.ticket_id = ticket_id;
         $.get('/nezabudka/comments/' + ticket_id + '/', {},
               function(json) {
                   $('#title', content).text(json.ticket.title);
@@ -69,7 +111,18 @@ var engine = {
                                       .css({width: _this.pct_of_width(_this.window_width, 0.45)})
                                      );
                   });
+                  // show action buttons
+                  $('#action_buttons').removeClass('hide');
               });
+    },
+    toggle_comment_form: function(ticket_id) {
+        var _this = this,
+            form = $('#add_comment_form'),
+            text = $('#comment', form);
+        form.css({
+            top: _this.window_height/5,
+            left: _this.window_width/3,
+        }).toggleClass('hide');
     }
 }
 

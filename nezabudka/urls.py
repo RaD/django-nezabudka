@@ -12,5 +12,7 @@ urlpatterns = patterns(
     url(r'^media/(?P<ticket_id>\d+)/$', Resource(handler=handlers.MediaResource)),
     url(r'^statuses/$', Resource(handler=handlers.StatusResource)),
 
+    url(r'^comments/add/$', Resource(handler=handlers.CommentAddResource)),
+
     url(r'^$', direct_to_template, {'template': 'nezabudka.html',}, name='index_page'),
 )
