@@ -8,11 +8,10 @@ import handlers
 urlpatterns = patterns(
     '',
     url(r'^tickets/$', Resource(handler=handlers.TicketResource)),
-    url(r'^comments/(?P<ticket_id>\d+)/$', Resource(handler=handlers.CommentResource)),
+    url(r'^comments/(?P<ticket_id>\d+)/$', Resource(handler=handlers.CommentResource), name='comments'),
     url(r'^media/(?P<ticket_id>\d+)/$', Resource(handler=handlers.MediaResource)),
     url(r'^statuses/$', Resource(handler=handlers.StatusResource)),
 
-    url(r'^comments/add/$', Resource(handler=handlers.CommentAddResource)),
 
     url(r'^$', direct_to_template, {'template': 'nezabudka.html',}, name='index_page'),
 )

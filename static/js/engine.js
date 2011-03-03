@@ -3,9 +3,14 @@ var engine = {
     window_width: 0,
     window_height: 0,
     ticket_id: 0,
+    form_widget: false,
+    form_dom: false,
 
     init: function() {
         var _this = this;
+        _this.form_widget = $('#form_widget');
+        _this.form_dom = $('form', _this.form_widget);
+
         // resize widgets on load and resize events
         $(window).bind('load resize', function() {
             var w = _this.window_width = $(this).width() - 50;
@@ -15,48 +20,28 @@ var engine = {
             $(tds[1]).css({width: _this.pct_of_width(w, 0.4)});
             $(tds[2]).css({width: _this.pct_of_width(w, 0.5)});
         });
+
+        // new ticket button
+        $('#new_ticket').click(function() {
+
+        });
+
+        // action buttons
+        $('#action_buttons span').each(function() {
+            $(this).click(function() { _this.toggle_widget(_this.form_widget); });
+        });
+
+        // form buttons
+        $('input[type="reset"]', _this.form_dom).click(function() {
+            _this.toggle_widget(_this.form_widget);
+        });
+
         // load tickets and statuses
         this.tickets();
         this.statuses();
-        // action buttons
-        $('#action_buttons span').each(function() {
-            $(this).click(function() {
-                _this.toggle_comment_form(_this.ticket_id);
-            });
-        });
-        _this.setup_comment_form();
     },
     pct_of_width: function(width, percent) {
         return Math.floor(width * percent) + 'px'
-    },
-    setup_comment_form: function() {
-        var _this = this,
-            form = $('#add_comment_form'),
-            text = $('#comment', form);
-        $('#cancel_comment', form).click(function() {
-            _this.toggle_comment_form(_this.ticket_id);
-        });
-        $('#add_comment', form).click(function() {
-            $.ajax({
-                type: 'POST',
-                url: '/nezabudka/comments/add/',
-                data: $.param({
-                    ticket: _this.ticket_id,
-                    text: text.val()
-                }),
-                success: function(msg) {
-                    text.val('');
-                    form.addClass('hide');
-                    _this.show_ticket(_this.ticket_id);
-                    $.jGrowl('Comment added successfully.', { header: 'Comments' });
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    $.jGrowl('Too fast commenting! Wait a little, please.<br/>'
-                             + 'Exception: ' + thrownError.toLowerCase(),
-                             { header: 'Comment Adding' });
-                }
-            });
-        });
     },
     tickets: function() {
         var _this = this;
@@ -99,8 +84,7 @@ var engine = {
               function(json) {
                   $('#title', content).text(json.ticket.title);
                   $('#component > span', content).text(json.ticket.component_title);
-
-                  $('div', comments).each(function() { $(this).remove(); })
+                  comments.empty();
                   $.each(json.comments, function() {
                       header = $('<div/>').html('<b>' + this.user + '</b> @ '
                                                 + '<b>' + this.date + '</b><br/>'
@@ -113,16 +97,37 @@ var engine = {
                   });
                   // show action buttons
                   $('#action_buttons').removeClass('hide');
+                  // prepare comment form
+                  var header = 'Comment',
+                      title = $('#title', _this.form_widget).html(header);
+                  _this.form_dom.attr({action: json.action})
+                                .submit(function() {
+                                    _this.submit_form(_this.form_dom, header,
+                                                      function(msg) {
+                                                          _this.form_widget.addClass('hide');
+                                                          _this.show_ticket(_this.ticket_id);
+                                                          $.jGrowl('Comment added successfully.', { header: header });
+                                                      });
+                                    return false;
+                                });
+                  $('#container', _this.form_widget).empty().append(json.form);
               });
     },
-    toggle_comment_form: function(ticket_id) {
-        var _this = this,
-            form = $('#add_comment_form'),
-            text = $('#comment', form);
-        form.css({
-            top: _this.window_height/5,
-            left: _this.window_width/3,
+    toggle_widget: function(widget) {
+        widget.css({
+            top: this.window_height/5,
+            left: this.window_width/3,
         }).toggleClass('hide');
+    },
+    submit_form: function(form, title, callback_success) {
+        var _this = this;
+        $.ajax({type: 'POST', url: form.attr('action'), data: form.formSerialize(),
+                success: callback_success,
+                error: function(xhr, ajaxOptions, thrownError) {
+                    $.jGrowl('Exception: ' + thrownError.toLowerCase(),
+                             { header: title });
+                }
+               });
     }
 }
 

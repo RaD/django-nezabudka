@@ -20,6 +20,7 @@
   {% endif %}
   <script type="text/javascript" src="/static/nezabudka/js/engine.js"></script>
   <script type="text/javascript" src="/static/nezabudka/js/jquery.jgrowl_compressed.js"></script>
+  <script type="text/javascript" src="/static/nezabudka/js/jquery.form.js"></script>
 </head>
 <body>
 
@@ -46,6 +47,8 @@
       </colgroup>
       <tr>
         <td id="selector">
+          <button id="new_ticket">{% trans "New Ticket" %}</button>
+
           <div>{% trans "Statuses" %}</div>
           <div id="status" class="sublevel"></div>
         </td>
@@ -67,15 +70,16 @@
     </table>
   </div>
 
-  <div id="add_comment_form" class="hide">
-    <fieldset>
-      <legend>{% trans "Enter the comment:" %}</legend>
-      <textarea id="comment" tabindex="4" cols="40" rows="15"></textarea>
+  <div id="form_widget" class="hide">
+    <div id="title"></div>
+    <form method="post">
+      <table id="container"></table>
       <div class="right">
-        <button id="add_comment">{% trans "Ok" %}</button>
-        <button id="cancel_comment">{% trans "Cancel" %}</button>
+        <input type="submit" name="submit" value="{% trans "Ok" %}"/>
+        <input type="reset" name="cancel" value="{% trans "Cancel" %}"/>
       </div>
-    </fieldset>
+    </form>
   </div>
+
 </body>
 </html>

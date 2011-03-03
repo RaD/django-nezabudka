@@ -2,6 +2,7 @@
 
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
+from django.core.urlresolvers import reverse
 from piston.handler import AnonymousBaseHandler
 from piston.utils import rc, throttle, validate
 import models, forms
@@ -17,10 +18,13 @@ class TicketResource(AnonymousBaseHandler):
         return out
 
 class CommentResource(AnonymousBaseHandler):
-    allowed_methods = ('GET',)
+    allowed_methods = ('GET', 'POST',)
+    model = models.Comment
+    fields = ('text',)
 
     def read(self, request, ticket_id):
-        out = {}
+        out = {'form': forms.CommentAdd(initial={'ticket': ticket_id,}),
+               'action': reverse('nezabudka:comments', kwargs={'ticket_id': int(ticket_id),}),}
         ticket = models.Ticket.objects.get(id=int(ticket_id))
         out['ticket'] = {'id': ticket.id,
                          'title': ticket.title,
@@ -40,16 +44,11 @@ class CommentResource(AnonymousBaseHandler):
                             'date': o.reg_datetime} for o in comments]
         return out
 
-class CommentAddResource(AnonymousBaseHandler):
-    allowed_methods = ('POST',)
-    model = models.Comment
-    fields = ('ticket', 'text',)
-
     @throttle(5, 60) # allow 5 times in 1 minutes
     @validate(forms.CommentAdd)
-    def create(self, request):
+    def create(self, request, ticket_id):
         if hasattr(request, 'form'):
-            request.form.save(request.user)
+            request.form.save(request.user, ticket_id)
             return rc.ALL_OK
 
 class MediaResource(AnonymousBaseHandler):

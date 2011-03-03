@@ -61,10 +61,6 @@ table {
    width: 100%;
 }
 
-table td {
-   height: 400px;
-}
-
 #sitename {
    float: left;
 }
@@ -103,7 +99,7 @@ table td {
    text-align: right;
 }
 
-#add_comment_form {
+#form_widget {
    position: absolute;
    width: 30%;
    padding: 4px;
@@ -111,7 +107,7 @@ table td {
    border: 2px solid gray;
    -moz-border-radius: 4px; -webkit-border-radius: 4px;
 }
-#add_comment_form textarea {
+#form_widget textarea {
    width: 96%;
 }
 
@@ -129,3 +125,7 @@ table td {
    background-color: #faa;
 }
 
+#new_ticket {
+margin: 4px 8px;
+padding: 8px;
+}
