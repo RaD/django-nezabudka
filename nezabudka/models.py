@@ -3,7 +3,7 @@
 
 from django.conf import settings
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.models import User
 
 class AbstractModel(models.Model):
@@ -98,6 +98,9 @@ class Ticket(AbstractModel):
     def __init__(self, *args, **kwargs):
         super(Ticket, self).__init__(*args, **kwargs)
         self._meta.get_field('user').verbose_name = _(u'Reported By')
+
+    def __unicode__(self):
+        return '%s %i' % (ugettext(u'Ticket'), self.pk)
 
 class Comment(AbstractModel):
     ticket = models.ForeignKey(Ticket, verbose_name=_(u'Ticket'))

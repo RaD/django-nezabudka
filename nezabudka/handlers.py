@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# (c) 2010-2011 Ruslan Popov <ruslan.popov@gmail.com>
 
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
@@ -8,14 +9,35 @@ from piston.utils import rc, throttle, validate
 import models, forms
 import re
 
-class TicketResource(AnonymousBaseHandler):
+class TicketListResource(AnonymousBaseHandler):
     allowed_methods = ('GET',)
+    model = models.Ticket
+
+    project_id = 1
 
     def read(self, request):
-        project = 1
-        tickets = models.Ticket.objects.filter(project=project)
+        tickets = self.model.objects.filter(project=self.project_id)
         out = [{'id': o.id, 'title': o.title} for o in tickets]
         return out
+
+class TicketResource(AnonymousBaseHandler):
+    allowed_methods = ('GET', 'POST',)
+    model = models.Ticket
+    fields = ('title', 'component', 'category', 'priority', 'severity', 'assigned_to',)
+
+    project_id = 1
+
+    def read(self, request):
+        out = {'form': forms.TicketAdd(initial={'project': self.project_id,}),
+               'action': reverse('nezabudka:ticket'),}
+        return out
+
+    @throttle(2, 60) # allow 2 times in 1 minutes
+    @validate(forms.TicketAdd)
+    def create(self, request):
+        if hasattr(request, 'form'):
+            request.form.save(request.user, self.project_id)
+            return rc.ALL_OK
 
 class CommentResource(AnonymousBaseHandler):
     allowed_methods = ('GET', 'POST',)
@@ -25,7 +47,7 @@ class CommentResource(AnonymousBaseHandler):
     def read(self, request, ticket_id):
         out = {'form': forms.CommentAdd(initial={'ticket': ticket_id,}),
                'action': reverse('nezabudka:comments', kwargs={'ticket_id': int(ticket_id),}),}
-        ticket = models.Ticket.objects.get(id=int(ticket_id))
+        ticket = get_object_or_404(models.Ticket, id=int(ticket_id))
         out['ticket'] = {'id': ticket.id,
                          'title': ticket.title,
                          'assigned_to_id': ticket.assigned_to.id,
@@ -39,7 +61,7 @@ class CommentResource(AnonymousBaseHandler):
                          'severity_id': ticket.severity.id,
                          'severity_title': ticket.severity.title,
                          }
-        comments = models.Comment.objects.filter(ticket=ticket)
+        comments = self.model.objects.filter(ticket=ticket)
         out['comments'] = [{'id': o.id, 'text': o.text, 'user': o.user.username,
                             'date': o.reg_datetime} for o in comments]
         return out
