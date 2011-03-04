@@ -86,7 +86,7 @@ var engine = {
                       var item = this;
                       var click_handler = function() { _this.show_ticket(item.id); }
                       var div = $('<div/>').addClass('listitem').click(click_handler)
-                      .text('Ticket '+item.id+': '+  item.title)
+                      .text('#'+item.id+': '+  item.title)
                       .attr({alt: item.title, title: item.title})
                       .css({width: (_width - 4) + 'px'});
                       content.append(div);
