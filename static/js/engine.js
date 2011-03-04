@@ -71,8 +71,9 @@ var engine = {
         $.ajax({type: 'POST', url: form.attr('action'), data: form.formSerialize(),
                 success: callback_success,
                 error: function(xhr, ajaxOptions, thrownError) {
-                    $.jGrowl('Response: ' + xhr.responseText + '<br/>' +
-                             'Exception: ' + thrownError.toLowerCase(), { header: title });
+                    $.jGrowl.error('Response: ' + xhr.responseText + '<br/>' +
+                                   'Exception: ' + thrownError.toLowerCase(),
+                                   { header: title });
                 }
                });
     },
