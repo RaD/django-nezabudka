@@ -71,7 +71,8 @@ var engine = {
         $.ajax({type: 'POST', url: form.attr('action'), data: form.formSerialize(),
                 success: callback_success,
                 error: function(xhr, ajaxOptions, thrownError) {
-                    $.jGrowl('Exception: ' + thrownError.toLowerCase() + '<br/>' + xhr.content, { header: title });
+                    $.jGrowl('Response: ' + xhr.responseText + '<br/>' +
+                             'Exception: ' + thrownError.toLowerCase(), { header: title });
                 }
                });
     },
@@ -127,7 +128,7 @@ var engine = {
                   $.each(json.comments, function() {
                       header = $('<div/>').html('<b>' + this.user + '</b> @ '
                                                 + '<b>' + this.date + '</b><br/>'
-                                                + this.text);
+                                                + '<pre>' + this.text + '</pre>');
                       comments.append($('<div/>')
                                       .append(header)
                                       .addClass('comment_item')
