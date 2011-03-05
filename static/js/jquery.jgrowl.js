@@ -329,6 +329,7 @@
     $.jGrowl.error = function(m, o){
         o = o || {};
         o.theme = 'error';
+        o.sticky = true;
         $.jGrowl(m, o);
     };
 })(jQuery);
