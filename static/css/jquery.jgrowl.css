@@ -132,5 +132,6 @@ div.jGrowl div.jGrowl-closer {
 }
 
 div.jGrowl div.jGrowl-notification.error {
-    background: #ff8080;
+   background: red;
+   color: yellow;
 }
