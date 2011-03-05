@@ -12,7 +12,8 @@ urlpatterns = patterns(
     url(r'^ticket/$', Resource(handler=handlers.TicketResource), name='ticket'),
     url(r'^comments/(?P<ticket_id>\d+)/$', Resource(handler=handlers.CommentResource), name='comments'),
     url(r'^media/(?P<ticket_id>\d+)/$', Resource(handler=handlers.MediaResource)),
-    url(r'^statuses/$', Resource(handler=handlers.StatusResource)),
+    url(r'^statuses/$', Resource(handler=handlers.StatusesResource)),
+    url(r'^status/(?P<pk_field>\d+)/$', Resource(handler=handlers.StatusResource), name='status'),
 
 
     url(r'^$', direct_to_template, {'template': 'nezabudka.html',}, name='index_page'),

@@ -59,12 +59,16 @@
           <div id="item_info">
             <div id="title"></div>
             <div id="component">{% trans "Component" %}: <span/></div>
+            <div id="status">{% trans "Status" %}: <span/></div>
           </div>
           <div id="comment_list"></div>
+
           <div id="action_buttons" class="hide">
-            <span>{% trans "Add comment" %}</span>
+            <span id="add_comment">{% trans "Add comment" %}</span>
             <span>{% trans "Add media" %}</span>
+            <span id="change_status">{% trans "Change status" %}</span>
           </div>
+
         </td>
       </tr>
     </table>
@@ -72,7 +76,7 @@
 
   <div id="form_widget" class="hide">
     <div id="title"></div>
-    <form method="post">
+    <form> {# method and action is filled with JS #}
       <table id="container"></table>
       <div class="right">
         <input type="submit" name="submit" value="{% trans "Ok" %}"/>

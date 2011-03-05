@@ -21,13 +21,42 @@ var engine = {
             $(tds[2]).css({width: _this.pct_of_width(w, 0.5)});
         });
 
+        // buttons
+        var actions = $('#action_buttons');
+        _this.init_ticket_new();
+        _this.reinit_action_buttons(actions);
+
+        // form buttons
+        $('input[type="reset"]', _this.form_dom).click(function() {
+            _this.toggle_widget(_this.form_widget);
+        });
+
+        // load tickets and statuses
+        this.update_tickets();
+        this.statuses();
+    },
+    reinit_action_buttons: function(actions) {
+        var _this = this;
+        // action buttons
+        console.log('action buttons');
+        $('#add_comment', actions)
+          .unbind('click')
+          .click(
+              function() {
+                  console.log('add_comment');
+                  _this.toggle_widget(_this.form_widget);
+              });
+
+        _this.init_status_change(actions);
+    },
+    init_ticket_new: function() {
         // new ticket button
         $('#new_ticket').click(function() {
             $.get('/nezabudka/ticket/', {},
                   function(json) {
                       var header = 'New Ticket',
                           title = $('#title', _this.form_widget).html(header);
-                      $(_this.form_dom).attr({action: json.action})
+                      $(_this.form_dom).attr({method: 'post', action: json.action})
                                        .unbind('submit')
                                        .submit(function() {
                                            _this.submit_form(_this.form_dom, header,
@@ -42,20 +71,36 @@ var engine = {
                       _this.toggle_widget(_this.form_widget);
                   });
         });
-
-        // action buttons
-        $('#action_buttons span').each(function() {
-            $(this).click(function() { _this.toggle_widget(_this.form_widget); });
-        });
-
-        // form buttons
-        $('input[type="reset"]', _this.form_dom).click(function() {
-            _this.toggle_widget(_this.form_widget);
-        });
-
-        // load tickets and statuses
-        this.update_tickets();
-        this.statuses();
+    },
+    init_status_change: function(actions) {
+        var _this = this;
+        $('#change_status', actions)
+        .unbind('click')
+        .click(
+            function() {
+                $.get('/nezabudka/status/' + _this.ticket_id + '/', {},
+                      function(json) {
+                          var header = 'Ticket\' Status',
+                              title = $('#title', _this.form_widget).html(header);
+                          // get the form description from server and insert into page's DOM
+                          $('#container', _this.form_widget).empty().append(json.form);
+                          // add submit handler
+                          $(_this.form_dom)
+                          .attr({method: 'put', action: json.action})
+                          .unbind('submit')
+                          .submit(function() {
+                              _this.submit_form(_this.form_dom, header,
+                                                function(msg) {
+                                                    _this.form_widget.addClass('hide');
+                                                    _this.show_ticket(_this.ticket_id);
+                                                    $.jGrowl('Status changed.', { header: header });
+                                                });
+                              return false;
+                          });
+                          // show the form
+                          _this.toggle_widget(_this.form_widget);
+                      });
+            });
     },
     pct_of_width: function(width, percent) {
         return Math.floor(width * percent) + 'px'
@@ -68,7 +113,7 @@ var engine = {
     },
     submit_form: function(form, title, callback_success) {
         var _this = this;
-        $.ajax({type: 'POST', url: form.attr('action'), data: form.formSerialize(),
+        $.ajax({type: form.attr('method'), url: form.attr('action'), data: form.formSerialize(),
                 success: callback_success,
                 error: function(xhr, ajaxOptions, thrownError) {
                     $.jGrowl.error('Response: ' + xhr.responseText + '<br/>' +
@@ -124,6 +169,7 @@ var engine = {
                   // fill the ticket panel
                   $('#title', content).text(json.ticket.title);
                   $('#component > span', content).text(json.ticket.component_title);
+                  $('#status > span', content).text(json.ticket.status_title);
 
                   // show comments' history
                   $.each(json.comments, function() {
@@ -141,7 +187,7 @@ var engine = {
                   // prepare comment form
                   var header = 'Comment',
                       title = $('#title', _this.form_widget).html(header);
-                  $(_this.form_dom).attr({action: json.action})
+                  $(_this.form_dom).attr({method: 'post', action: json.action})
                                    .unbind('submit')
                                    .submit(function() {
                                        _this.submit_form(_this.form_dom, header,
@@ -152,6 +198,7 @@ var engine = {
                                                          });
                                        return false;
                                    });
+                  // form content itself
                   $('#container', _this.form_widget).empty().append(json.form);
               });
     }

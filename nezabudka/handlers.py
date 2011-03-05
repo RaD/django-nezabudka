@@ -4,10 +4,40 @@
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
+from django.core import exceptions
 from piston.handler import AnonymousBaseHandler
-from piston.utils import rc, throttle, validate
+from piston.utils import rc, throttle, FormValidationError
+from.piston.decorator import decorator as piston_decorator
 import models, forms
 import re
+
+def validate(v_form, operation='POST'):
+    @piston_decorator
+    def wrap(f, self, request, *a, **kwa):
+        model_instance = None
+
+        if operation == 'PUT':
+            if not self.has_model():
+                return rc.NOT_IMPLEMENTED
+
+            if 'pk_field' not in kwa: # No pk was specified
+                return rc.BAD_REQUEST
+
+            try:
+                instance = self.queryset(request).get(pk=kwa.get('pk_field'))
+            except exceptions.ObjectDoesNotExist:
+                return rc.NOT_FOUND
+            except exceptions.MultipleObjectsReturned:
+                return rc.BAD_REQUEST
+
+        form = v_form(getattr(request, operation), instance=instance)
+
+        if form.is_valid():
+            setattr(request, 'form', form)
+            return f(self, request, *a, **kwa)
+        else:
+            raise FormValidationError(form)
+    return wrap
 
 class TicketListResource(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -67,10 +97,34 @@ class CommentResource(AnonymousBaseHandler):
         return out
 
     @throttle(5, 60) # allow 5 times in 1 minutes
-    @validate(forms.CommentAdd)
+    @validate(forms.CommentAdd, 'POST')
     def create(self, request, ticket_id):
         if hasattr(request, 'form'):
             request.form.save(request.user, ticket_id)
+            return rc.ALL_OK
+
+class StatusesResource(AnonymousBaseHandler):
+    allowed_methods = ('GET',)
+
+    def read(self, request):
+        statuses = models.Status.objects.all()
+        out = [{'id': o.id, 'title': o.title} for o in statuses]
+        return out
+
+class StatusResource(AnonymousBaseHandler):
+    allowed_methods = ('GET', 'PUT',)
+    model = models.Ticket
+
+    def read(self, request, pk_field):
+        out = {'form': forms.Status(initial={'ticket': pk_field,}),
+               'action': reverse('nezabudka:status', kwargs={'pk_field': int(pk_field),}),}
+        return out
+
+    @throttle(5, 60) # allow 5 times in 1 minutes
+    @validate(forms.Status, 'PUT')
+    def update(self, request, *args, **kwargs):
+        if hasattr(request, 'form'):
+            request.form.save(request.user)
             return rc.ALL_OK
 
 class MediaResource(AnonymousBaseHandler):
@@ -78,12 +132,4 @@ class MediaResource(AnonymousBaseHandler):
 
     def read(self, request, ticket_id):
         pass
-
-class StatusResource(AnonymousBaseHandler):
-    allowed_methods = ('GET',)
-
-    def read(self, request):
-        statuses = models.Status.objects.all()
-        out = [{'id': o.id, 'title': o.title} for o in statuses]
-        return out
 

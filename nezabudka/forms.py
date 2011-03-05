@@ -3,6 +3,7 @@
 
 from django import forms
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext, ugettext_lazy as _
 import models
 
 class TicketAdd(forms.ModelForm):
@@ -29,3 +30,21 @@ class CommentAdd(forms.ModelForm):
         obj.user = user
         obj.ticket = get_object_or_404(models.Ticket, pk=ticket_id)
         obj.save()
+
+class Status(forms.ModelForm):
+
+    class Meta:
+        model = models.Ticket
+        fields = ('status',)
+
+    def save(self, user):
+        ticket = super(Status, self).save()
+
+        template = _(u'Status changed: %s.')
+        comment = models.Comment(user=user,
+                                 ticket=ticket,
+                                 text=template % ticket.status)
+        comment.save()
+
+
+
