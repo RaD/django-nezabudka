@@ -24,13 +24,13 @@ def validate(v_form, operation='POST'):
                 return rc.BAD_REQUEST
 
             try:
-                instance = self.queryset(request).get(pk=kwa.get('pk_field'))
+                model_instance = self.queryset(request).get(pk=kwa.get('pk_field'))
             except exceptions.ObjectDoesNotExist:
                 return rc.NOT_FOUND
             except exceptions.MultipleObjectsReturned:
                 return rc.BAD_REQUEST
 
-        form = v_form(getattr(request, operation), instance=instance)
+        form = v_form(getattr(request, operation), instance=model_instance)
 
         if form.is_valid():
             setattr(request, 'form', form)

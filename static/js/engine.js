@@ -37,8 +37,6 @@ var engine = {
     },
     reinit_action_buttons: function(actions) {
         var _this = this;
-        // action buttons
-        console.log('action buttons');
         $('#add_comment', actions)
           .unbind('click')
           .click(
@@ -50,6 +48,7 @@ var engine = {
         _this.init_status_change(actions);
     },
     init_ticket_new: function() {
+        var _this = this;
         // new ticket button
         $('#new_ticket').click(function() {
             $.get('/nezabudka/ticket/', {},
